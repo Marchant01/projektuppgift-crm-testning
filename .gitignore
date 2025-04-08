@@ -500,4 +500,4 @@ dist-ssr
 *.sw?
 
 # appsettings.json
-# appsettings.json
+appsettings.json
