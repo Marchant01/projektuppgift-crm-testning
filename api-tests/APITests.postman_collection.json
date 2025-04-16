@@ -1,0 +1,1250 @@
+{
+	"info": {
+		"_postman_id": "0aa7c255-2854-425f-bedd-04ba7f4f7874",
+		"name": "APITests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "43555664",
+		"_collection_link": "https://celvinmarchant.postman.co/workspace/crm-test~3087b068-2d59-4253-a59f-0d1a5de65c21/collection/43555664-0aa7c255-2854-425f-bedd-04ba7f4f7874?action=share&source=collection_link&creator=43555664"
+	},
+	"item": [
+		{
+			"name": "GetIssues",
+			"item": [
+				{
+					"name": "AdminLogin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response is correct\", function () {\r",
+									"    pm.response.to.be.ok;\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains correct data\", function () {\r",
+									"    var responseData = pm.response.json();\r",
+									"    pm.expect(responseData.username).to.eql(\"Master\");\r",
+									"    pm.expect(responseData.role).to.eql(\"ADMIN\");\r",
+									"    pm.expect(responseData.company).to.eql(\"Demo AB\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"m@email.com\",\r\n    \"password\": \"abc123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local_host}}/api/login",
+							"host": [
+								"{{local_host}}"
+							],
+							"path": [
+								"api",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetIssues",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Test get issues response status, body and content-type\", function () {\r",
+									"    pm.response.to.be.ok;\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"\r",
+									"var responseData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Issues has the correct company name\", function () {\r",
+									"    for(let i = 0; i < responseData.lenght; i++) {\r",
+									"        pm.expect(responseData.issues[i].companyName).to.eql(\"Demo AB\");\r",
+									"    }\r",
+									"})\r",
+									"\r",
+									"pm.test(\"List has all content\", function () {\r",
+									"    // Checks if content is an object\r",
+									"    pm.expect(responseData).to.be.an(\"object\");\r",
+									"\r",
+									"    // Checks if object has a list\r",
+									"    pm.expect(responseData.issues).to.be.an(\"array\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Issue has the correct data types\", function () {\r",
+									"    // Checks if each item in the list has the correct data types.\r",
+									"    responseData.issues.forEach((issue) => {\r",
+									"    pm.expect(issue.id).to.be.a(\"string\");\r",
+									"    pm.expect(issue.companyName).to.be.a(\"string\");\r",
+									"    pm.expect(issue.customerEmail).to.be.a(\"string\");\r",
+									"    pm.expect(issue.subject).to.be.a(\"string\");\r",
+									"    pm.expect(issue.state).to.be.a(\"string\");\r",
+									"    pm.expect(issue.title).to.be.a(\"string\");\r",
+									"    pm.expect(issue.created).to.be.a(\"string\");\r",
+									"    pm.expect(issue.created).to.match(/\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}/);\r",
+									"    pm.expect(issue.latest).to.be.a(\"string\");\r",
+									"    pm.expect(issue.latest).to.match(/\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}/);\r",
+									"    });\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{local_host}}/api/issues",
+							"host": [
+								"{{local_host}}"
+							],
+							"path": [
+								"api",
+								"issues"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AdminLogout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Logout gives the right status\", function () {\r",
+									"    pm.response.to.be.ok;\r",
+									"    pm.response.to.have.status(200)\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Message in response is correct\", function () {\r",
+									"    var responseData = pm.response.json();\r",
+									"    pm.expect(responseData.message).to.eql(\"Session cleared\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local_host}}/api/login",
+							"host": [
+								"{{local_host}}"
+							],
+							"path": [
+								"api",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "CRU",
+			"item": [
+				{
+					"name": "AdminLogin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response is correct\", function () {\r",
+									"    pm.response.to.be.ok;\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains correct data\", function () {\r",
+									"    var responseData = pm.response.json();\r",
+									"    pm.expect(responseData.username).to.eql(\"Master\");\r",
+									"    pm.expect(responseData.role).to.eql(\"ADMIN\");\r",
+									"    pm.expect(responseData.company).to.eql(\"Demo AB\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"m@email.com\",\r\n    \"password\": \"abc123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local_host}}/api/login",
+							"host": [
+								"{{local_host}}"
+							],
+							"path": [
+								"api",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetIssues",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Test get issues response status, body and content-type\", function () {\r",
+									"    pm.response.to.be.ok;\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"\r",
+									"var responseData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Issues has the correct company name\", function () {\r",
+									"    for(let i = 0; i < responseData.lenght; i++) {\r",
+									"        pm.expect(responseData.issues[i].companyName).to.eql(\"Demo AB\");\r",
+									"    }\r",
+									"})\r",
+									"\r",
+									"pm.test(\"List has all content\", function () {\r",
+									"    // Checks if content is an object\r",
+									"    pm.expect(responseData).to.be.an(\"object\");\r",
+									"\r",
+									"    // Checks if object has a list\r",
+									"    pm.expect(responseData.issues).to.be.an(\"array\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Issue has the correct data types\", function () {\r",
+									"    // Checks if each item in the list has the correct data types.\r",
+									"    responseData.issues.forEach((issue) => {\r",
+									"    pm.expect(issue.id).to.be.a(\"string\");\r",
+									"    pm.expect(issue.companyName).to.be.a(\"string\");\r",
+									"    pm.expect(issue.customerEmail).to.be.a(\"string\");\r",
+									"    pm.expect(issue.subject).to.be.a(\"string\");\r",
+									"    pm.expect(issue.state).to.be.a(\"string\");\r",
+									"    pm.expect(issue.title).to.be.a(\"string\");\r",
+									"    pm.expect(issue.created).to.be.a(\"string\");\r",
+									"    pm.expect(issue.created).to.match(/\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}/);\r",
+									"    pm.expect(issue.latest).to.be.a(\"string\");\r",
+									"    pm.expect(issue.latest).to.match(/\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}/);\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									"pm.environment.set(\"issues_amount\", responseData.issues.length);\r",
+									"\r",
+									"console.log(\"Amount of issues: \" + pm.variables.get(\"issues_amount\"));\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{local_host}}/api/issues",
+							"host": [
+								"{{local_host}}"
+							],
+							"path": [
+								"api",
+								"issues"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AdminLogout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Logout gives the right status\", function () {\r",
+									"    pm.response.to.be.ok;\r",
+									"    pm.response.to.have.status(200)\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Message in response is correct\", function () {\r",
+									"    var responseData = pm.response.json();\r",
+									"    pm.expect(responseData.message).to.eql(\"Session cleared\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local_host}}/api/login",
+							"host": [
+								"{{local_host}}"
+							],
+							"path": [
+								"api",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PostIssue",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response is ok\", function() {\r",
+									"    pm.response.to.be.ok;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Message in response is correct\", function () {\r",
+									"    var responseData = pm.response.json();\r",
+									"    pm.expect(responseData.message).to.eql(\"Issue was created succesfully.\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"no@email.com\",\r\n    \"title\": \"Test: API-001\",\r\n    \"subject\": \"Reklamation\",\r\n    \"message\": \"Test: API-001\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5173/api/issues/create/Demo%20AB/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5173",
+							"path": [
+								"api",
+								"issues",
+								"create",
+								"Demo%20AB",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AdminLogin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response is correct\", function () {\r",
+									"    pm.response.to.be.ok;\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains correct data\", function () {\r",
+									"    var responseData = pm.response.json();\r",
+									"    pm.expect(responseData.username).to.eql(\"Master\");\r",
+									"    pm.expect(responseData.role).to.eql(\"ADMIN\");\r",
+									"    pm.expect(responseData.company).to.eql(\"Demo AB\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"m@email.com\",\r\n    \"password\": \"abc123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local_host}}/api/login",
+							"host": [
+								"{{local_host}}"
+							],
+							"path": [
+								"api",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetNewIssues",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Test get issues response status, body and content-type\", function () {\r",
+									"    pm.response.to.be.ok;\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"\r",
+									"var responseData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Issues has the correct company name\", function () {\r",
+									"    for(let i = 0; i < responseData.lenght; i++) {\r",
+									"        pm.expect(responseData.issues[i].companyName).to.eql(\"Demo AB\");\r",
+									"    }\r",
+									"})\r",
+									"\r",
+									"pm.test(\"List has all content\", function () {\r",
+									"    // Checks if content is an object\r",
+									"    pm.expect(responseData).to.be.an(\"object\");\r",
+									"\r",
+									"    // Checks if object has a list\r",
+									"    pm.expect(responseData.issues).to.be.an(\"array\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Issue has the correct data types\", function () {\r",
+									"    // Checks if each item in the list has the correct data types.\r",
+									"    responseData.issues.forEach((issue) => {\r",
+									"    pm.expect(issue.id).to.be.a(\"string\");\r",
+									"    pm.expect(issue.companyName).to.be.a(\"string\");\r",
+									"    pm.expect(issue.customerEmail).to.be.a(\"string\");\r",
+									"    pm.expect(issue.subject).to.be.a(\"string\");\r",
+									"    pm.expect(issue.state).to.be.a(\"string\");\r",
+									"    pm.expect(issue.title).to.be.a(\"string\");\r",
+									"    pm.expect(issue.created).to.be.a(\"string\");\r",
+									"    pm.expect(issue.created).to.match(/\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}/);\r",
+									"    pm.expect(issue.latest).to.be.a(\"string\");\r",
+									"    pm.expect(issue.latest).to.match(/\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}/);\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									"pm.test(`There is ${pm.variables.get(\"issues_amount\") +1} issues in the list.`, function() {\r",
+									"    pm.expect(responseData.issues.length).to.eql(pm.variables.get(\"issues_amount\") +1);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"The created issue has the correct information\", function() {\r",
+									"    pm.expect(responseData.issues[0].companyName).to.eql(\"Demo AB\");\r",
+									"    pm.expect(responseData.issues[0].customerEmail).to.eql(\"no@email.com\");\r",
+									"    pm.expect(responseData.issues[0].subject).to.eql(\"Reklamation\");\r",
+									"    pm.expect(responseData.issues[0].state).to.eql(\"NEW\");\r",
+									"    pm.expect(responseData.issues[0].title).to.eql(\"Test: API-001\");\r",
+									"});\r",
+									"\r",
+									"// Save the the id of the issue\r",
+									"pm.environment.set(\"issue_id\", responseData.issues[0].id);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{local_host}}/api/issues",
+							"host": [
+								"{{local_host}}"
+							],
+							"path": [
+								"api",
+								"issues"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response is ok\", function () {\r",
+									"    pm.response.is.ok;\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local_host}}/api/issues/{{issue_id}}/?state=\"CLOSED\"",
+							"host": [
+								"{{local_host}}"
+							],
+							"path": [
+								"api",
+								"issues",
+								"{{issue_id}}",
+								""
+							],
+							"query": [
+								{
+									"key": "state",
+									"value": "\"CLOSED\"",
+									"description": "Changes the issue state to closed"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetUpdatedIssues",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Test get issues response status, body and content-type\", function () {\r",
+									"    pm.response.to.be.ok;\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"\r",
+									"var responseData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Issues has the correct company name\", function () {\r",
+									"    for(let i = 0; i < responseData.lenght; i++) {\r",
+									"        pm.expect(responseData.issues[i].companyName).to.eql(\"Demo AB\");\r",
+									"    }\r",
+									"})\r",
+									"\r",
+									"pm.test(\"List has all content\", function () {\r",
+									"    // Checks if content is an object\r",
+									"    pm.expect(responseData).to.be.an(\"object\");\r",
+									"\r",
+									"    // Checks if object has a list\r",
+									"    pm.expect(responseData.issues).to.be.an(\"array\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Issue has the correct data types\", function () {\r",
+									"    // Checks if each item in the list has the correct data types.\r",
+									"    responseData.issues.forEach((issue) => {\r",
+									"    pm.expect(issue.id).to.be.a(\"string\");\r",
+									"    pm.expect(issue.companyName).to.be.a(\"string\");\r",
+									"    pm.expect(issue.customerEmail).to.be.a(\"string\");\r",
+									"    pm.expect(issue.subject).to.be.a(\"string\");\r",
+									"    pm.expect(issue.state).to.be.a(\"string\");\r",
+									"    pm.expect(issue.title).to.be.a(\"string\");\r",
+									"    pm.expect(issue.created).to.be.a(\"string\");\r",
+									"    pm.expect(issue.created).to.match(/\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}/);\r",
+									"    pm.expect(issue.latest).to.be.a(\"string\");\r",
+									"    pm.expect(issue.latest).to.match(/\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}/);\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									"pm.test(\"The issue status has been updated\", function() {\r",
+									"    pm.expect(repsonseData.issues[0].state).to.eql(\"CLOSED\");\r",
+									"});\r",
+									"\r",
+									"console.log(responseData.issues[0].state);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{local_host}}/api/issues",
+							"host": [
+								"{{local_host}}"
+							],
+							"path": [
+								"api",
+								"issues"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Create, reade, update an issue."
+		},
+		{
+			"name": "LoginAll",
+			"item": [
+				{
+					"name": "AdminLogin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response is correct\", function () {\r",
+									"    pm.response.to.be.ok;\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains correct data\", function () {\r",
+									"    var responseData = pm.response.json();\r",
+									"    pm.expect(responseData.username).to.eql(\"Master\");\r",
+									"    pm.expect(responseData.role).to.eql(\"ADMIN\");\r",
+									"    pm.expect(responseData.company).to.eql(\"Demo AB\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"m@email.com\",\r\n    \"password\": \"abc123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local_host}}/api/login",
+							"host": [
+								"{{local_host}}"
+							],
+							"path": [
+								"api",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AdminLogout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Logout gives the right status\", function () {\r",
+									"    pm.response.to.be.ok;\r",
+									"    pm.response.to.have.status(200)\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Message in response is correct\", function () {\r",
+									"    var responseData = pm.response.json();\r",
+									"    pm.expect(responseData.message).to.eql(\"Session cleared\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{local_host}}/api/login",
+							"host": [
+								"{{local_host}}"
+							],
+							"path": [
+								"api",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UserLogin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response is correct\", function () {\r",
+									"    pm.response.to.be.ok;\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains correct data\", function () {\r",
+									"    var responseData = pm.response.json();\r",
+									"    pm.expect(responseData.username).to.eql(\"no92one\");\r",
+									"    pm.expect(responseData.role).to.eql(\"USER\");\r",
+									"    pm.expect(responseData.company).to.eql(\"Demo AB\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"no@email.com\",\r\n    \"password\": \"abc123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local_host}}/api/login",
+							"host": [
+								"{{local_host}}"
+							],
+							"path": [
+								"api",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UserLogout",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local_host}}/api/login",
+							"host": [
+								"{{local_host}}"
+							],
+							"path": [
+								"api",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AdminTestLogin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response is correct\", function () {\r",
+									"    pm.response.to.be.ok;\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains correct data\", function () {\r",
+									"    var responseData = pm.response.json();\r",
+									"    pm.expect(responseData.username).to.eql(\"Testare\");\r",
+									"    pm.expect(responseData.role).to.eql(\"ADMIN\");\r",
+									"    pm.expect(responseData.company).to.eql(\"Test AB\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"test@gmail.com\",\r\n    \"password\": \"abc123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local_host}}/api/login",
+							"host": [
+								"{{local_host}}"
+							],
+							"path": [
+								"api",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AdminTestLogout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Logout gives the right status\", function () {\r",
+									"    pm.response.to.be.ok;\r",
+									"    pm.response.to.have.status(200)\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Message in response is correct\", function () {\r",
+									"    var responseData = pm.response.json();\r",
+									"    pm.expect(responseData.message).to.eql(\"Session cleared\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{local_host}}/api/login",
+							"host": [
+								"{{local_host}}"
+							],
+							"path": [
+								"api",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "AlreadyLoggedIn",
+			"item": [
+				{
+					"name": "AdminLogin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response is correct\", function () {\r",
+									"    pm.response.to.be.ok;\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains correct data\", function () {\r",
+									"    var responseData = pm.response.json();\r",
+									"    pm.expect(responseData.username).to.eql(\"Master\");\r",
+									"    pm.expect(responseData.role).to.eql(\"ADMIN\");\r",
+									"    pm.expect(responseData.company).to.eql(\"Demo AB\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"m@email.com\",\r\n    \"password\": \"abc123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local_host}}/api/login",
+							"host": [
+								"{{local_host}}"
+							],
+							"path": [
+								"api",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AdminLoginAgain",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response is correct\", function () {\r",
+									"    pm.response.to.be.badRequest;\r",
+									"    pm.response.to.have.status(400);\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains correct data\", function () {\r",
+									"    var responseData = pm.response.json();\r",
+									"    pm.expect(responseData.message).to.eql(\"Someone is already logged in.\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"m@email.com\",\r\n    \"password\": \"abc123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local_host}}/api/login",
+							"host": [
+								"{{local_host}}"
+							],
+							"path": [
+								"api",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Logout gives the right status\", function () {\r",
+									"    pm.response.to.be.ok;\r",
+									"    pm.response.to.have.status(200)\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Message in response is correct\", function () {\r",
+									"    var responseData = pm.response.json();\r",
+									"    pm.expect(responseData.message).to.eql(\"Session cleared\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{local_host}}/api/login",
+							"host": [
+								"{{local_host}}"
+							],
+							"path": [
+								"api",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UserLogin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response is correct\", function () {\r",
+									"    pm.response.to.be.ok;\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains correct data\", function () {\r",
+									"    var responseData = pm.response.json();\r",
+									"    pm.expect(responseData.username).to.eql(\"no92one\");\r",
+									"    pm.expect(responseData.role).to.eql(\"USER\");\r",
+									"    pm.expect(responseData.company).to.eql(\"Demo AB\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"no@email.com\",\r\n    \"password\": \"abc123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local_host}}/api/login",
+							"host": [
+								"{{local_host}}"
+							],
+							"path": [
+								"api",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UserLoginAgain",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response is correct\", function () {\r",
+									"    pm.response.to.be.badRequest;\r",
+									"    pm.response.to.have.status(400);\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains correct data\", function () {\r",
+									"    var responseData = pm.response.json();\r",
+									"    pm.expect(responseData.message).to.eql(\"Someone is already logged in.\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"m@email.com\",\r\n    \"password\": \"abc123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local_host}}/api/login",
+							"host": [
+								"{{local_host}}"
+							],
+							"path": [
+								"api",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Logout gives the right status\", function () {\r",
+									"    pm.response.to.be.ok;\r",
+									"    pm.response.to.have.status(200)\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Message in response is correct\", function () {\r",
+									"    var responseData = pm.response.json();\r",
+									"    pm.expect(responseData.message).to.eql(\"Session cleared\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{local_host}}/api/login",
+							"host": [
+								"{{local_host}}"
+							],
+							"path": [
+								"api",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
