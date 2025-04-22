@@ -294,11 +294,7 @@
 									"\r",
 									"pm.environment.set(\"issues_amount\", responseData.issues.length);\r",
 									"\r",
-									"console.log(\"Amount of issues: \" + pm.variables.get(\"issues_amount\"));\r",
-									"\r",
-									"\r",
-									"\r",
-									""
+									"console.log(\"Amount of issues: \" + pm.variables.get(\"issues_amount\"));"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -541,6 +537,9 @@
 									"\r",
 									"// Save the the id of the issue\r",
 									"pm.environment.set(\"issue_id\", responseData.issues[0].id);\r",
+									"\r",
+									"// Save the status of the issue\r",
+									"pm.environment.set(\"issue_state\", responseData.issues[0].state);\r",
 									""
 								],
 								"type": "text/javascript",
@@ -575,8 +574,38 @@
 							"script": {
 								"exec": [
 									"pm.test(\"Response is ok\", function () {\r",
-									"    pm.response.is.ok;\r",
+									"    pm.response.to.be.ok;\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Message in response is correct\", function () {\r",
+									"    var responseData = pm.response.json();\r",
+									"    pm.expect(responseData.message).to.eql(\"Issue state was updated.\");\r",
 									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"if(pm.variables.get(\"issue_state\") == \"NEW\")\r",
+									"{\r",
+									"    pm.environment.set(\"new_issue_state\", \"OPEN\");\r",
+									"    console.log(\"new_issue_state set to open\");\r",
+									"}\r",
+									"else if(pm.variables.get(\"issue_state\") == \"OPEN\")\r",
+									"{\r",
+									"    pm.environment.set(\"new_issue_state\", \"CLOSED\");\r",
+									"    console.log(\"new_issue_state set to CLOSED\");    \r",
+									"}\r",
+									"else\r",
+									"{\r",
+									"    pm.environment.set(\"new_issue_state\", \"OPEN\");\r",
+									"    console.log(\"new_issue_state set to OPEN\");\r",
+									"}"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -588,7 +617,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "",
+							"raw": "{\r\n    \"newState\": \"{{new_issue_state}}\",\r\n    \"oldState\": \"{{issue_state}}\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -596,7 +625,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{local_host}}/api/issues/{{issue_id}}/?state=\"CLOSED\"",
+							"raw": "{{local_host}}/api/issues/{{issue_id}}/state",
 							"host": [
 								"{{local_host}}"
 							],
@@ -604,14 +633,7 @@
 								"api",
 								"issues",
 								"{{issue_id}}",
-								""
-							],
-							"query": [
-								{
-									"key": "state",
-									"value": "\"CLOSED\"",
-									"description": "Changes the issue state to closed"
-								}
+								"state"
 							]
 						}
 					},
@@ -664,7 +686,7 @@
 									"});\r",
 									"\r",
 									"pm.test(\"The issue status has been updated\", function() {\r",
-									"    pm.expect(repsonseData.issues[0].state).to.eql(\"CLOSED\");\r",
+									"    pm.expect(responseData.issues[0].state).to.eql(pm.variables.get(\"new_issue_state\"));\r",
 									"});\r",
 									"\r",
 									"console.log(responseData.issues[0].state);"
