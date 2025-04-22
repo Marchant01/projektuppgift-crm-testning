@@ -62,5 +62,5 @@ jobs:
           script: | 
             cd /srv/www/<halmstad>/<celvin> # första gången
             cd /srv/www/<halmstad>/<celvin>/LINUS-CRM # andra gången 
-            git clone <https:adress> # första gången
+            git clone <git@github.com:Marchant01/projektuppgift-crm-testning.git> # första gången
             git pull # andra gången
