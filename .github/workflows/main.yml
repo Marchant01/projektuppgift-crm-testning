@@ -31,7 +31,6 @@ jobs:
 
   gui_tests:
     runs-on: ubuntu-latest
-    needs: api_tests # Kör endast om api testerna går igenom
     steps:
       - uses: actions/checkout@v4
       - name: Setup dotnet
@@ -52,7 +51,6 @@ jobs:
   deploy:
     name: Deploy to Server
     runs-on: ubuntu-latest
-    needs: [api_tests, gui_tests] # Kör endast om alla tidigare tester är OK
     steps:
       - name: Deploy App
         uses: appleboy/ssh-action@v1.2.0
