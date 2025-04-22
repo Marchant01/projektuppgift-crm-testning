@@ -1,36 +1,19 @@
-﻿# CRM-Project 
+﻿# CRM-Project
 
-## Setup
+## Tests
 
-### Install dependencis
-- In the terminal, open client and run "npm install". 
-- In the terminal, open server and run "dotnet restore".
+### API - Tests
 
-### Database
+1. Log in as admin
+2. Get issues from a company
+3. Log out as admin
+4. Create an issue without being logged in
+5. Update the status of an issue
+6. Log in while there is already a session.
+7. Register as an admin
 
-- Create an PostgreSQL database, open a query console, copy the script from "Database-Script.sql" and run it.
-- Go in to the Database.cs and add your PostgreSQL connection information. 
-
-Example
-```c#
-private readonly string _host = "localhost";
-private readonly string _port = "5432";
-private readonly string _username = "postgres";
-private readonly string _password = "password";
-private readonly string _database = "crm-site";
-```
-
-### Email
-
-- In server, open the appsettings.json and configure the "Email"-object. You need to sett the email and password for the "Email".  
-
-Example
-```txt
-"Email": {
-    "SmtpServer": "smtp.gmail.com", // If your not using a gmail, you need to configure this.
-    "SmtpPort": 587, 
-    "FromEmail": "your-email",
-    "Password": "your-password"
-  }
-```
-
+### GUI - Tests
+1. Log in as admin
+2. Change the status of an issue
+3. Create an issue without being signed in.
+4. Register a user and a company
